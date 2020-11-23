@@ -1,0 +1,11 @@
+{
+    "dataDirJSON": "../teams/DSC180A_FA20_A00/a01group09/cocoapi",
+    "dataDir": "../teams/DSC180A_FA20_A00/a01group09/COCO-2017",
+    "dataTypeVal": "val2017",
+    "dataTypeTrain" : "train2017",
+    "annDir": "{}/annotations",
+    "annZipFile": "{}/annotations_train{}.zip",
+    "annFile": "{}/instances_{}.json",
+    "annURL": "http://images.cocodataset.org/annotations/annotations_train{}.zip",
+    "capAnnFile":"{}/annotations/captions_{}.json"
+}

@@ -1,0 +1,6 @@
+{
+    "modelDir": "./src/model/checkpoint2_model.pth",
+    "epochs": 2,
+    "lr": 0.001,
+    "momentum": 0.9
+}
