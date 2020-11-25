@@ -1,0 +1,5 @@
+{
+    "train_inputs":"test/test_data/train/",
+    "train_labels":"test/test_data/train/anno",
+    "modelDir": "test/"
+}

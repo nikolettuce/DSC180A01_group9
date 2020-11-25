@@ -1,9 +1,5 @@
 {
-    "dataDir": "test/testdata",
-    "dataType": "val2017",
-    "annDir": "{}/annotations",
-    "annZipFile": "{}/annotations_train{}.zip",
-    "annFile": "{}/instances_{}.json",
-    "annURL": "http://images.cocodataset.org/annotations/annotations_train{}.zip",
-    "capAnnFile":"{}/annotations/captions_{}.json"
+    "train_inputs":"test/test_data/train/",
+    "train_labels":"test/test_data/train/anno",
+    "modelDir": "test/"
 }
