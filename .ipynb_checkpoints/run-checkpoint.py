@@ -7,7 +7,7 @@ sys.path.insert(0, 'src/data')
 sys.path.insert(0, 'src/analysis')
 sys.path.insert(0, 'src/model')
 sys.path.insert(0, 'src/util')
-sys.path.insert(0, 'test')
+sys.path.insert(0, 'test/') # m7 path
 
 from src.util import download_annotations
 from src.util import run_demo
@@ -48,34 +48,22 @@ def main(targets):
         # run coco_demo.py function run_demo
         run_demo(dataDirJSON, dataType, annDir, annZipFile, annFile, annURL, capAnnFile)
         
-    elif 'test' in targets:
-        with open('config/model-params.json') as fh:
-            model_cfg = json.load(fh)
+    elif 'test_meth' in targets:
         with open('test/test-data-params.json') as fh:
-            test_cfg = json.load(fh)
-            
-        # load test data
-        inputs, labels = test_model.load_testdata(test_cfg['train_inputs'],test_cfg['train_labels'])
-        
-        # change to gpu 
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        print("COMPUTING AS: {}".format(device))
-        
-        # define CNN
-        net = model.Net()
-        net = net.to(device) # to gpu
-    
-        # run the model
-        test_model.run_model(
-            input_tensors = inputs,
-            label_tensors = labels,
-            net = net,
-            epochs = model_cfg['epochs'],
-            lr = model_cfg['lr'],
-            momentum = model_cfg['momentum'],
-            modelDir = model_cfg['modelDir'],
-            device = device
-        )
+                data_cfg = json.load(fh)
+                print(data_cfg['dataDirJSON'])
+
+        # load paths
+        dataDirJSON = data_cfg['dataDirJSON']
+        dataType = data_cfg['dataTypeVal']
+        annDir = data_cfg['annDir'].format(dataDirJSON)
+        annZipFile = data_cfg['annZipFile'].format(dataDirJSON, dataType)
+        annFile = data_cfg['annFile'].format(annDir, dataType)
+        annURL = data_cfg['annURL'].format(dataType)
+        capAnnFile = data_cfg['capAnnFile'].format(dataDirJSON, dataType)
+
+        # run coco_demo.py function run_demo
+        run_test_demo(dataDirJSON, dataType, annDir, annZipFile, annFile, annURL, capAnnFile)
         
     elif 'train' in targets:
         with open('config/data-params.json') as fh:
@@ -118,7 +106,7 @@ def main(targets):
                                        shuffle=True, num_workers=2)
 
         # run the model
-        test_model.run_model(
+        model.run_model(
             loader = trainloader,
             net = net,
             epochs = model_cfg['epochs'],
@@ -128,7 +116,7 @@ def main(targets):
             device = device
         )
         
-    elif 'test_model' in targets:
+    elif 'test' in targets:
         with open('config/data-params.json') as fh:
             data_cfg = json.load(fh)
         # load the modelDir
@@ -164,8 +152,42 @@ def main(targets):
         
         model.test_model(net, testloader, device)
         
-        
+    elif 'm7' in targets:
+        with open('test/test-data-params.json') as fh:
+            m7_config = json.load(fh)
             
+        with open('config/model-params.json') as fh:
+            model_cfg = json.load(fh)
+            
+        # load in data
+        inputs, labels = test_model.load_testdata(m7_config['train_inputs'], m7_config['train_labels'])
+        
+        # transforms
+        transform = transforms.Compose([ 
+                transforms.Resize([240,240]),
+                transforms.ToTensor()
+        ])
+        
+        # change to gpu
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        print('COMPUTING AS: {}'.format(device))
+        
+        net = model.Net()
+        net = net.to(device)
+        
+        # run the model
+        test_model.run_model(
+            input_tensors = inputs,
+            label_tensors = labels,
+            net = net,
+            epochs = model_cfg['epochs'],
+            lr = model_cfg['lr'],
+            momentum = model_cfg['momentum'],
+            modelDir = m7['modelDir'],
+            device = device
+        )
+
+        
 if __name__ == '__main__':
     targets = sys.argv[1:]
     main(targets)

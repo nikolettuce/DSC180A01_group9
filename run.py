@@ -7,12 +7,14 @@ sys.path.insert(0, 'src/data')
 sys.path.insert(0, 'src/analysis')
 sys.path.insert(0, 'src/model')
 sys.path.insert(0, 'src/util')
+sys.path.insert(0, 'test/') # m7 path
 
 from src.util import download_annotations
 from src.util import run_demo
 from src.model import model
 from src.util import coco_dataloader
 from src.util import coco_dict
+from test import test_model
 
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
@@ -150,8 +152,42 @@ def main(targets):
         
         model.test_model(net, testloader, device)
         
-        
+    elif 'm7' in targets:
+        with open('test/test-data-params.json') as fh:
+            m7_config = json.load(fh)
             
+        with open('config/model-params.json') as fh:
+            model_cfg = json.load(fh)
+            
+        # load in data
+        inputs, labels = test_model.load_testdata(m7_config['train_inputs'], m7_config['train_labels'])
+        
+        # transforms
+        transform = transforms.Compose([ 
+                transforms.Resize([240,240]),
+                transforms.ToTensor()
+        ])
+        
+        # change to gpu
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        print('COMPUTING AS: {}'.format(device))
+        
+        net = model.Net()
+        net = net.to(device)
+        
+        # run the model
+        test_model.run_model(
+            input_tensors = inputs,
+            label_tensors = labels,
+            net = net,
+            epochs = model_cfg['epochs'],
+            lr = model_cfg['lr'],
+            momentum = model_cfg['momentum'],
+            modelDir = m7['modelDir'],
+            device = device
+        )
+
+        
 if __name__ == '__main__':
     targets = sys.argv[1:]
     main(targets)
