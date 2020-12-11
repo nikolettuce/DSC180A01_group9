@@ -1,6 +1,6 @@
 {
-    "dataDirJSON": "../teams/DSC180A_FA20_A00/a01group09/cocoapi",
-    "dataDir": "../teams/DSC180A_FA20_A00/a01group09/COCO-2017",
+    "dataDirJSON": "src/data/cocoapi",
+    "dataDir": "../../../datasets/COCO-2017",
     "dataTypeVal": "val2017",
     "dataTypeTrain" : "train2017",
     "annDir": "{}/annotations",

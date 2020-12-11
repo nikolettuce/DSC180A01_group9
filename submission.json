@@ -1,7 +1,4 @@
 {
-    "config": ["config/data-params.json", "config/model-params.json"], 
-    "build": "run.py",
-    "library": ["src"],
-    "notebook": ["notebooks/Checkpoint2_code.ipynb"],
-    "targets": ["train", "test"]
+    "dockerhub-id": "nikolettuce/dsc180:latest",
+    "repository-id": "https://github.com/nikolettuce/DSC180A01_group9.git"
 }

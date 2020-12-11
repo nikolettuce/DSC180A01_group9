@@ -157,6 +157,8 @@ def main(targets):
     elif 'test' in targets:
         with open('config/gradcam-params.json') as fh:
             gradcam_cfg = json.load(fh)
+        with open('config/model-params.json') as fh:
+            model_cfg = json.load(fh)
         
         # load in pretrained model for performance
         print('Loading model...')
